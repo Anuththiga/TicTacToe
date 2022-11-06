@@ -18,18 +18,37 @@ public class TicTacToe {
 		while(true) {
 			Scanner sc = new Scanner(System.in);
 			System.out.println("Enter the Position(1-9): ");
-			int position = sc.nextInt();
+			int playPosition = sc.nextInt();
+			while(playerPositions.contains(playPosition) || computerPositions.contains(playerPositions)) {
+				System.out.println("Position taken! Enter a new Position...");
+				playPosition = sc.nextInt();
+			}
 
-			System.out.println(position);
+			System.out.println(playPosition);
 			
-			piecePlace(gameBoard, position, "Player");
+			piecePlace(gameBoard, playPosition, "Player");
+			
+			String win = checkWinning();
+			if(win.length() > 0) {
+				System.out.println(win);
+			}
 			
 			Random random = new Random();
 			int compPosition = random.nextInt(9) + 1;
+			while(playerPositions.contains(compPosition) || computerPositions.contains(compPosition)) {
+				compPosition = random.nextInt(9) + 1;
+			}
 			
 			piecePlace(gameBoard, compPosition, "Computer");
 			
 			printGameBoard(gameBoard);
+			
+			
+			win = checkWinning();
+			if(win.length() > 0) {
+				System.out.println(win);
+			}
+			
 		}
 
 		
@@ -48,8 +67,10 @@ public class TicTacToe {
 		char symbol = ' ';
 		if(user.equals("Player")) {
 			symbol = 'X';
+			playerPositions.add(position);
 		} else if(user.equals("Computer")) {
 			symbol = 'O';
+			computerPositions.add(position);
 		}
 		
 		switch (position) {
@@ -105,6 +126,16 @@ public class TicTacToe {
 		winning.add(rightCol);
 		winning.add(cross1);
 		winning.add(cross2);
+		
+		for(List l : winning) {
+			if(playerPositions.containsAll(l)) {
+				return "Congratulations you won!";
+			} else if(computerPositions.containsAll(l)) {
+				return "Computer wins :(";
+			} else if(playerPositions.size() + computerPositions.size() == 9) {
+				return "CAT";
+			}
+		}
 		
 	
 
